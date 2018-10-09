@@ -38,12 +38,23 @@ namespace PersonnelManager.Business.Services
                 throw new InvalidOperationException();
             }
 
+            if (cadre.DateEmbauche > DateTime.Today.AddMonths(3))
+            {
+                throw new BusinessException("La date d'embauche ne peut pas être supérieur à plus 3 mois");
+            }
+
             if (cadre.DateEmbauche.Year <= 1920)
             {
                 throw new BusinessException("La date d'embauche doit être > 1920");
             }
 
+            if (cadre.SalaireMensuel <= 0)
+            {
+                throw new BusinessException("Le salaire mensuel ne peut être négatif");
+            }
+
             this.dataEmploye.EnregistrerCadre(cadre);
+
         }
 
         public void EnregistrerOuvrier(Ouvrier ouvrier)
@@ -55,7 +66,12 @@ namespace PersonnelManager.Business.Services
 
             if (ouvrier.TauxHoraire <= 0)
             {
-                throw new BusinessException("Taux horaire invalide");
+                throw new BusinessException("Taux horaire invalide, il ne peut être négatif");
+            }
+
+            if (ouvrier.DateEmbauche > DateTime.Today.AddMonths(3))
+            {
+                throw new BusinessException("La date d'embauche ne doit pas être > à la date du jour plus 3 mois");
             }
 
             if (ouvrier.DateEmbauche.Year <= 1920)
@@ -77,11 +93,13 @@ namespace PersonnelManager.Business.Services
 
         public IEnumerable<SalaireOuvrier> GetSalaireOuvrier(int idOuvrier, DateTime mois)
         {
+            //var SalaireOuvrier = new List<SalaireOuvrier>();
             return null;
         }
 
         public IEnumerable<Salaire> GetSalaireCadre(int idCadre, DateTime mois)
         {
+            //var SalaireCadre = new List<Salaire>();
             return null;
         }
     }

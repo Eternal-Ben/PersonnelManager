@@ -76,30 +76,112 @@ namespace PersonnelManager.Business.Tests
         [TestMethod]
         public void DateEmbaucheCadreAnterieureAujourdhuiPlus3Mois()
         {
-            Assert.Fail();
+            var fauxDataEmploye = new Mock<IDataEmploye>();
+
+            fauxDataEmploye.Setup(x => x.EnregistrerCadre(It.IsAny<Cadre>()));
+
+            var serviceEmploye = new ServiceEmploye(fauxDataEmploye.Object);
+            var cadre = new Cadre
+            {
+                Nom = "Dupont",
+                Prenom = "Gérard",
+                DateEmbauche = new DateTime(2019, 01, 31),
+                SalaireMensuel = 1500
+            };
+
+            var exception = Assert.ThrowsException<BusinessException>(() =>
+            {
+                serviceEmploye.EnregistrerCadre(cadre);
+            });
+
+            Assert.AreEqual("La date d'embauche ne peut pas être supérieur à plus 3 mois",
+                exception.Message);
         }
 
         [TestMethod]
         public void DateEmbaucheOuvrierAnterieureAujourdhuiPlus3Mois()
         {
-            Assert.Fail();
+            var fauxDataEmploye = new Mock<IDataEmploye>();
+
+            fauxDataEmploye.Setup(x => x.EnregistrerOuvrier(It.IsAny<Ouvrier>()));
+
+            var serviceEmploye = new ServiceEmploye(fauxDataEmploye.Object);
+            var ouvrier = new Ouvrier
+            {
+                Nom = "Trape",
+                Prenom = "Jacques",
+                DateEmbauche = new DateTime(2019, 01, 31),
+                TauxHoraire = 1500
+            };
+
+            var exception = Assert.ThrowsException<BusinessException>(() =>
+            {
+                serviceEmploye.EnregistrerOuvrier(ouvrier);
+            });
+
+            Assert.AreEqual("La date d'embauche ne doit pas être > à la date du jour plus 3 mois",
+                exception.Message);
         }
 
         [TestMethod]
         public void SalaireCadrePositif()
         {
-            Assert.Fail();
+            var fauxDataEmploye = new Mock<IDataEmploye>();
+
+            fauxDataEmploye.Setup(x => x.EnregistrerCadre(It.IsAny<Cadre>()));
+
+            var serviceEmploye = new ServiceEmploye(fauxDataEmploye.Object);
+            var cadre = new Cadre
+            {
+                Nom = "Dupont",
+                Prenom = "Gérard",
+                DateEmbauche = new DateTime(1920, 12, 31),
+                SalaireMensuel = 1500
+            };
+            var exception = Assert.ThrowsException<BusinessException>(() =>
+            {
+                serviceEmploye.EnregistrerCadre(cadre);
+            });
+            Assert.AreEqual("Le salaire mensuel ne peut être négatif",
+                exception.Message);
         }
 
         [TestMethod]
         public void TauxHoraireOuvrierPositif()
         {
-            Assert.Fail();
-        }
+            var fauxDataEmploye = new Mock<IDataEmploye>();
 
+            fauxDataEmploye.Setup(x => x.EnregistrerOuvrier(It.IsAny<Ouvrier>()));
+
+            var serviceEmploye = new ServiceEmploye(fauxDataEmploye.Object);
+            var ouvrier = new Ouvrier
+            {
+                Nom = "Dupont",
+                Prenom = "Gérard",
+                DateEmbauche = new DateTime(1920, 12, 31),
+                TauxHoraire = 1500
+            };
+            var exception = Assert.ThrowsException<BusinessException>(() =>
+            {
+                serviceEmploye.EnregistrerOuvrier(ouvrier);
+            });
+            Assert.AreEqual("Taux horaire invalide, il ne peut être négatif",
+                    exception.Message);
+        }
         [TestMethod]
         public void InterdireCaracteresSpeciauxDansNomEtPrenomCadre()
         {
+            var fauxDataEmploye = new Mock<IDataEmploye>();
+            fauxDataEmploye.Setup(x => x.EnregistrerOuvrier(It.IsAny<Ouvrier>()));
+
+            var cadre = new Cadre
+            {
+                Nom = "Dupont",
+                Prenom = "Gérard",
+                DateEmbauche = new DateTime(1920, 12, 31),
+                TauxHoraire = 1500
+            }
+
             Assert.Fail();
         }
 
